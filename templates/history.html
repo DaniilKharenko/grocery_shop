@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}{{ 'Historia zamówień' if lang == 'pl' else 'Order History' }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="section-title text-center mb-4">📜 {{ 'Historia zamówień' if lang == 'pl' else 'Order History' }}</h2>
+
+    {% if historia|length == 0 %}
+        <p class="text-center text-muted">{{ 'Brak zamówień do wyświetlenia.' if lang == 'pl' else 'No orders found.' }}</p>
+        <div class="text-center">
+            <a href="{{ url_for('index') }}" class="btn-primary">⬅ {{ 'Wróć do sklepu' if lang == 'pl' else 'Back to shop' }}</a>
+        </div>
+    {% else %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>{{ 'Data' if lang == 'pl' else 'Date' }}</th>
+                    <th>{{ 'Produkt' if lang == 'pl' else 'Product' }}</th>
+                    <th>{{ 'Ilość' if lang == 'pl' else 'Quantity' }}</th>
+                    <th>{{ 'Cena' if lang == 'pl' else 'Price' }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in historia %}
+                <tr>
+                    <td>#{{ item.id }}</td>
+                    <td>{{ item.data.strftime('%Y-%m-%d') }}</td>
+                    <td>{{ item.nazwa }}</td>
+                    <td>{{ item.ilosc }}</td>
+                    <td>{{ '%.2f'|format(item.cena_jednostkowa) }} PLN</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</div>
+{% endblock %}

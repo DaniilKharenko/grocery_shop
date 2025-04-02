@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <div class="product-page">
+        <div class="product-image">
+            <img src="{{ url_for('static', filename='images/' + produkt.zdjecie) }}" alt="{{ produkt.nazwa }}">
+        </div>
+        <div class="product-details">
+            <h2>{{ produkt.nazwa }}</h2>
+            <p class="product-desc">{{ produkt.opis }}</p>
+            <p class="product-price">{{ "%.2f"|format(produkt.cena) }} PLN / {{ produkt.typ_ceny }}</p>
+            <p class="product-meta">{{ 'Dodano:' if lang == 'pl' else 'Added:' }} {{ produkt.data_dodania.strftime('%d.%m.%Y') }}</p>
+
+            {% if rating %}
+                <p class="product-rating">
+                    <i class="fas fa-star"></i> {{ 'Średnia ocena:' if lang == 'pl' else 'Average rating:' }} {{ "%.1f" % rating }}/5
+                </p>
+            {% endif %}
+
+            <form method="post" action="{{ url_for('add_to_cart') }}" class="product-form">
+                <input type="hidden" name="produkt_id" value="{{ produkt.id }}">
+                <input type="number" name="ilosc" value="1" min="0.1" step="0.1" class="qty-input">
+                <button type="submit" class="btn-buy">
+                    <i class="fas fa-cart-plus"></i> {{ 'Dodaj do koszyka' if lang == 'pl' else 'Add to cart' }}
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="product-extra">
+        <h4>{{ 'Oceń produkt' if lang == 'pl' else 'Rate this product' }}</h4>
+        <form method="post" action="{{ url_for('rate') }}" class="rating-form">
+            <input type="hidden" name="produkt_id" value="{{ produkt.id }}">
+            <select name="ocena">
+                {% for i in range(1,6) %}
+                    <option value="{{ i }}">{{ i }}★</option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="btn-secondary">{{ 'Oceń' if lang == 'pl' else 'Submit rating' }}</button>
+        </form>
+
+        <h4 style="margin-top:2rem;">{{ 'Komentarze' if lang == 'pl' else 'Comments' }}</h4>
+        {% for k in komentarze %}
+            <div class="comment-box">
+                <strong>{{ k.imie }}</strong> • {{ k.data.strftime('%d.%m.%Y %H:%M') }}
+                <p>{{ k.tresc }}</p>
+            </div>
+        {% else %}
+            <p class="text-muted">{{ 'Brak komentarzy.' if lang == 'pl' else 'No comments yet.' }}</p>
+        {% endfor %}
+
+        {% if session.get('user_id') %}
+        <form method="post" action="{{ url_for('comment') }}" class="comment-form">
+            <input type="hidden" name="produkt_id" value="{{ produkt.id }}">
+            <textarea name="tresc" placeholder="{{ 'Dodaj komentarz...' if lang == 'pl' else 'Add a comment...' }}" required></textarea>
+            <button type="submit" class="btn-secondary">{{ 'Dodaj' if lang == 'pl' else 'Submit' }}</button>
+        </form>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

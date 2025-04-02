@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Sklep spożywczy{% endblock %}</title>
+    
+    <!-- 🌐 Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
+    
+    <!-- 🎨 CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <!-- 🧠 JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js" defer></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+</head>
+<body>
+    <header class="main-header">
+        <div class="container">
+            <div id="logo" class="logo">🛒 Online Store</div>
+            <nav class="nav-links">
+                <a href="{{ url_for('index') }}">{{ 'Strona główna' if session.lang == 'pl' else 'Home' }}</a>
+                <a href="{{ url_for('cart') }}">{{ 'Koszyk' if session.lang == 'pl' else 'Cart' }} 🛍</a>
+                <a href="{{ url_for('change_lang', lang='pl') }}">🇵🇱</a>
+                <a href="{{ url_for('change_lang', lang='en') }}">🇬🇧</a>
+            </nav>
+            
+        </div>
+    </header>
+
+    <main class="container">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="flash flash-success">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-columns">
+            <div class="footer-column">
+                <h4>ABOUT</h4>
+                <p>Our Story</p>
+                <p>Contact</p>
+            </div>
+            <div class="footer-column">
+                <h4>SERVICE</h4>
+                <p>Returns</p>
+                <p>Help</p>
+            </div>
+            <div class="footer-column">
+                <h4>SOCIAL</h4>
+                <p>Instagram</p>
+                <p>Facebook</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% block title %}Admin Panel{% endblock %}
+
+{% block content %}
+<h2 class="mb-4 text-center">🛠️ {{ 'Panel administratora' if lang == 'pl' else 'Admin Dashboard' }}</h2>
+
+<div class="text-end mb-3">
+    <a href="{{ url_for('add_product') }}" class="btn btn-success">
+        {{ 'Dodaj nowy produkt' if lang == 'pl' else 'Add New Product' }}
+    </a>
+</div>
+
+<table class="table table-bordered align-middle">
+    <thead class="table-success">
+        <tr>
+            <th>ID</th>
+            <th>{{ 'Nazwa' if lang == 'pl' else 'Name' }}</th>
+            <th>{{ 'Cena' if lang == 'pl' else 'Price' }}</th>
+            <th>{{ 'Ilość' if lang == 'pl' else 'Stock' }}</th>
+            <th>{{ 'Popularność' if lang == 'pl' else 'Popularity' }}</th>
+            <th>{{ 'Opcje' if lang == 'pl' else 'Actions' }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for produkt in produkty %}
+        <tr>
+            <td>{{ produkt.id }}</td>
+            <td>{{ produkt.nazwa }}</td>
+            <td>{{ "%.2f"|format(produkt.cena) }} PLN</td>
+            <td>{{ produkt.ilosc }}</td>
+            <td>{{ produkt.popularnosc }}</td>
+            <td>
+                <a href="{{ url_for('edit_product', id=produkt.id) }}" class="btn btn-sm btn-outline-primary">
+                    {{ 'Edytuj' if lang == 'pl' else 'Edit' }}
+                </a>
+                <a href="{{ url_for('delete_product', id=produkt.id) }}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Na pewno usunąć?')">
+                    {{ 'Usuń' if lang == 'pl' else 'Delete' }}
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<hr class="my-5">
+
+<div class="row">
+    <div class="col-md-4">
+        <h4>🔥 {{ 'Top 5 produktów' if lang == 'pl' else 'Top 5 Products' }}</h4>
+        <ul>
+            {% for p in top5 %}
+            <li>{{ p.nazwa }} ({{ p.popularnosc }})</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="col-md-4">
+        <h4>💤 {{ 'Najmniej popularne' if lang == 'pl' else 'Least Popular' }}</h4>
+        <ul>
+            {% for p in worst5 %}
+            <li>{{ p.nazwa }} ({{ p.popularnosc }})</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="col-md-4">
+        <h4>💰 {{ 'Średnia wartość zamówienia' if lang == 'pl' else 'Average Order Value' }}</h4>
+        <p class="fs-4">{{ avg_order or 0 }} PLN</p>
+
+        <h4 class="mt-4">👤 {{ 'Top klienci' if lang == 'pl' else 'Top Customers' }}</h4>
+        <ul>
+            {% for k in top_klienci %}
+            <li>{{ k.imie }} ({{ k.liczba }} {{ 'zamówień' if lang == 'pl' else 'orders' }})</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<div class="mb-4 text-end">
+    <a href="{{ url_for('export_produkty') }}" class="btn btn-outline-info me-2">
+        📦 {{ 'Eksportuj produkty' if lang == 'pl' else 'Export Products' }}
+    </a>
+    <a href="{{ url_for('export_zamowienia') }}" class="btn btn-outline-warning me-2">
+        🧾 {{ 'Eksportuj zamówienia' if lang == 'pl' else 'Export Orders' }}
+    </a>
+    <a href="{{ url_for('export_klienci') }}" class="btn btn-outline-success">
+        👥 {{ 'Eksportuj klientów' if lang == 'pl' else 'Export Customers' }}
+    </a>
+</div>
+{% endblock %}

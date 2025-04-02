@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block title %}{{ 'Dodaj produkt' if lang == 'pl' else 'Add Product' }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="section-title text-center mb-4">➕ {{ 'Dodaj nowy produkt' if lang == 'pl' else 'Add New Product' }}</h2>
+
+    <form method="POST" action="{{ url_for('add_product') }}" class="product-form">
+        <div class="form-group">
+            <label>{{ 'Nazwa' if lang == 'pl' else 'Name' }}</label>
+            <input type="text" name="nazwa" required>
+        </div>
+
+        <div class="form-group">
+            <label>{{ 'Opis' if lang == 'pl' else 'Description' }}</label>
+            <textarea name="opis" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>{{ 'Cena' if lang == 'pl' else 'Price' }} (PLN)</label>
+            <input type="number" step="0.01" name="cena" required>
+        </div>
+
+        <div class="form-group">
+            <label>{{ 'Ilość' if lang == 'pl' else 'Quantity' }}</label>
+            <input type="number" step="0.1" name="ilosc" required>
+        </div>
+
+        <div class="form-group">
+            <label>{{ 'Typ ceny' if lang == 'pl' else 'Unit type' }}</label>
+            <select name="typ_ceny">
+                <option value="kg">kg</option>
+                <option value="szt">szt</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>{{ 'Kategoria' if lang == 'pl' else 'Category' }}</label>
+            <select name="kategoria">
+                {% for kat in kategorie %}
+                    <option value="{{ kat.id }}">{{ kat.nazwa }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>{{ 'Zdjęcie (nazwa pliku)' if lang == 'pl' else 'Image filename' }}</label>
+            <input type="text" name="zdjecie" required>
+        </div>
+
+        <div class="text-center">
+            <button type="submit" class="btn-primary">✅ {{ 'Dodaj produkt' if lang == 'pl' else 'Add Product' }}</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

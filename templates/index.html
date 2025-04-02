@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="{{ session.get('lang', 'pl') }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ 'Sklep spożywczy' if lang == 'pl' else 'Grocery Store' }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+</head>
+<body class="dark-theme">
+
+<header class="header">
+    <div class="container">
+        <div class="header-top">
+            <h1 id="logo" class="logo">{{ 'Sklep spożywczy' if lang == 'pl' else 'Grocery Store' }}</h1>
+            <div class="header-actions">
+                <a href="{{ url_for('change_lang', lang='pl') }}" class="lang-btn">PL</a>
+                <a href="{{ url_for('change_lang', lang='en') }}" class="lang-btn">EN</a>
+                <a href="{{ url_for('cart') }}" class="cart-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">{{ session.cart | length }}</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="banner">
+            <div class="banner-content">
+                <h2>{{ 'Promocja!' if lang == 'pl' else 'Sale!' }}</h2>
+                <p>{{ 'Do -50% na wybrane produkty' if lang == 'pl' else 'Up to 50% off selected items' }}</p>
+                <a href="#products" class="btn-primary">{{ 'Kup teraz' if lang == 'pl' else 'Shop Now' }}</a>
+            </div>
+            <img src="{{ url_for('static', filename='images/banner.jpg') }}" alt="Banner">
+        </div>
+    </div>
+</header>
+
+<main class="container">
+    <section class="filters">
+        <form method="get" action="{{ url_for('index') }}" class="filters-form">
+            <select name="kategoria">
+                <option value="">{{ 'Wszystkie kategorie' if lang == 'pl' else 'All categories' }}</option>
+                {% for kat in kategorie %}
+                    <option value="{{ kat.id }}" {% if kat.id|string == request.args.get('kategoria') %}selected{% endif %}>{{ kat.nazwa }}</option>
+                {% endfor %}
+            </select>
+
+            <input type="text" name="szukaj" placeholder="{{ 'Szukaj produktu' if lang == 'pl' else 'Search product' }}" value="{{ request.args.get('szukaj', '') }}">
+
+            <select name="sortuj">
+                <option value="">{{ 'Sortuj według' if lang == 'pl' else 'Sort by' }}</option>
+                <option value="nazwa">{{ 'Nazwa' if lang == 'pl' else 'Name' }}</option>
+                <option value="cena_asc">{{ 'Cena rosnąco' if lang == 'pl' else 'Price low to high' }}</option>
+                <option value="cena_desc">{{ 'Cena malejąco' if lang == 'pl' else 'Price high to low' }}</option>
+                <option value="najnowsze">{{ 'Najnowsze' if lang == 'pl' else 'Newest' }}</option>
+            </select>
+
+            <button type="submit" class="btn-secondary">
+                <i class="fas fa-filter"></i> {{ 'Filtruj' if lang == 'pl' else 'Filter' }}
+            </button>
+        </form>
+    </section>
+
+    <section id="products" class="products-grid">
+        {% for produkt in produkty %}
+        <div class="product-card">
+            <a href="{{ url_for('product', id=produkt.id) }}">
+                <img src="{{ url_for('static', filename='images/' + produkt.zdjecie) }}" alt="{{ produkt.nazwa }}">
+            </a>
+            <div class="product-info">
+                <h3 class="product-name">{{ produkt.nazwa }}</h3>
+                <p class="product-desc">{{ produkt.opis }}</p>
+                <p class="product-price">
+                    <strong>{{ "%.2f"|format(produkt.cena) }}</strong> PLN / {{ produkt.typ_ceny }}
+                </p>
+                <form method="post" action="{{ url_for('add_to_cart') }}">
+                    <input type="hidden" name="produkt_id" value="{{ produkt.id }}">
+                    <input type="number" name="ilosc" value="1" min="0.1" step="0.1" class="qty-input">
+                    <button type="submit" class="btn-buy">
+                        <i class="fas fa-cart-plus"></i> {{ 'Kup' if lang == 'pl' else 'Buy' }}
+                    </button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+
+        {% if produkty|length == 0 %}
+        <p class="text-center text-muted">
+            {{ 'Brak wyników dla wyszukiwania.' if lang == 'pl' else 'No products found.' }}
+        </p>
+        {% endif %}
+    </section>
+</main>
+
+<footer class="footer">
+    <div class="container footer-content">
+        <div class="footer-col">
+            <h4>ABOUT</h4>
+            <ul>
+                <li><a href="#">{{ 'O nas' if lang == 'pl' else 'About us' }}</a></li>
+                <li><a href="#">{{ 'Dostawa' if lang == 'pl' else 'Delivery' }}</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>{{ 'Obsługa klienta' if lang == 'pl' else 'Customer Service' }}</h4>
+            <ul>
+                <li><a href="#">{{ 'Pomoc' if lang == 'pl' else 'Help' }}</a></li>
+                <li><a href="#">{{ 'Reklamacje' if lang == 'pl' else 'Returns' }}</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>Social</h4>
+            <ul>
+                <li><a href="#">Facebook</a></li>
+                <li><a href="#">Instagram</a></li>
+            </ul>
+        </div>
+    </div>
+    <p class="footer-bottom">© 2025 Sklep Online</p>
+</footer>
+
+</body>
+</html>

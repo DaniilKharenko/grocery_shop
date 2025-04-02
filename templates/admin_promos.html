@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}{{ 'Kody rabatowe' if lang == 'pl' else 'Promo Codes' }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="section-title text-center mb-4">🏷️ {{ 'Kody rabatowe' if lang == 'pl' else 'Promo Codes' }}</h2>
+
+    <form method="POST" action="{{ url_for('add_promokod') }}" class="d-flex gap-2 mb-4 justify-content-center">
+        <input type="text" name="kod" required placeholder="PROMO2025" class="form-control w-auto">
+        <input type="number" name="znizka" required placeholder="10" class="form-control w-auto">
+        <button type="submit" class="btn btn-success">➕ {{ 'Dodaj kod' if lang == 'pl' else 'Add code' }}</button>
+    </form>
+
+    {% if promokody|length == 0 %}
+        <p class="text-center text-muted">{{ 'Brak kodów rabatowych.' if lang == 'pl' else 'No promo codes available.' }}</p>
+    {% else %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>{{ 'Kod' if lang == 'pl' else 'Code' }}</th>
+                    <th>{{ 'Zniżka (%)' if lang == 'pl' else 'Discount (%)' }}</th>
+                    <th>{{ 'Status' if lang == 'pl' else 'Status' }}</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for kod in promokody %}
+                <tr>
+                    <td>{{ kod.id }}</td>
+                    <td>{{ kod.kod }}</td>
+                    <td>{{ kod.znizka }}</td>
+                    <td>{{ 'Aktywny' if kod.aktywny else 'Nieaktywny' }}</td>
+                    <td>
+                        <a href="{{ url_for('toggle_promokod', id=kod.id) }}" class="btn btn-outline-warning btn-sm">
+                            🔁 {{ 'Przełącz' if lang == 'pl' else 'Toggle' }}
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</div>
+{% endblock %}

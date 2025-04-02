@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}{{ 'Dziękujemy' if lang == 'pl' else 'Thank You' }}{% endblock %}
+
+{% block content %}
+<div class="container text-center">
+    <h2 class="section-title">🎉 {{ 'Dziękujemy za zamówienie!' if lang == 'pl' else 'Thank you for your order!' }}</h2>
+
+    <p class="fs-5 mb-4">{{ 'Zamówienie zostało złożone pomyślnie.' if lang == 'pl' else 'Your order has been placed successfully.' }}</p>
+
+    <p class="text-muted">{{ 'Data i godzina:' if lang == 'pl' else 'Date and time:' }} {{ now.strftime('%Y-%m-%d %H:%M') }}</p>
+
+    <a href="{{ url_for('index') }}" class="btn-primary mt-4">⬅ {{ 'Powrót do sklepu' if lang == 'pl' else 'Back to shop' }}</a>
+</div>
+{% endblock %}

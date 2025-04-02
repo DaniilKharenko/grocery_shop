@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}Użytkownicy{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="section-title text-center mb-4">👥 {{ 'Użytkownicy' if lang == 'pl' else 'Users' }}</h2>
+
+    {% if users|length == 0 %}
+        <p class="text-center text-muted">{{ 'Brak użytkowników.' if lang == 'pl' else 'No users found.' }}</p>
+    {% else %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>{{ 'Imię' if lang == 'pl' else 'Name' }}</th>
+                    <th>Email</th>
+                    <th>{{ 'Rola' if lang == 'pl' else 'Role' }}</th>
+                    <th>{{ 'Zamówienia' if lang == 'pl' else 'Orders' }}</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in users %}
+                <tr>
+                    <td>{{ u.id }}</td>
+                    <td>{{ u.imie }}</td>
+                    <td>{{ u.email }}</td>
+                    <td>{{ u.rola }}</td>
+                    <td>{{ u.zamowien }}</td>
+                    <td>
+                        <a href="{{ url_for('change_user_role', user_id=u.id) }}" class="btn btn-outline-primary btn-sm">
+                            🔁 {{ 'Zmień rolę' if lang == 'pl' else 'Change role' }}
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</div>
+{% endblock %}

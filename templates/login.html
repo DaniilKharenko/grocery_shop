@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}{{ 'Logowanie' if lang == 'pl' else 'Login' }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="section-title text-center mb-4">🔐 {{ 'Logowanie' if lang == 'pl' else 'Login' }}</h2>
+
+    <form method="POST" action="{{ url_for('login') }}" class="login-form">
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" required placeholder="email@example.com">
+        </div>
+
+        <div class="form-group">
+            <label for="haslo">{{ 'Hasło' if lang == 'pl' else 'Password' }}</label>
+            <input type="password" name="haslo" id="haslo" required placeholder="********">
+        </div>
+
+        <div class="text-center">
+            <button type="submit" class="btn-primary">🔓 {{ 'Zaloguj się' if lang == 'pl' else 'Login' }}</button>
+        </div>
+    </form>
+
+    <p class="text-center mt-3">
+        {{ 'Nie masz konta?' if lang == 'pl' else "Don't have an account?" }}
+        <a href="{{ url_for('register') }}">{{ 'Zarejestruj się' if lang == 'pl' else 'Register here' }}</a>
+    </p>
+</div>
+{% endblock %}

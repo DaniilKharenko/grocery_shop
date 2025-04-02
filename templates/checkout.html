@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}{{ 'Zamówienie' if lang == 'pl' else 'Checkout' }}{% endblock %}
+
+{% block content %}
+<div class="container checkout-page">
+    <h2 class="section-title text-center mb-4">🧾 {{ 'Zamówienie' if lang == 'pl' else 'Checkout' }}</h2>
+
+    <form method="POST" action="{{ url_for('apply_promo') }}" class="d-flex justify-content-center gap-2 mb-4">
+        <input type="text" name="kod" class="form-control w-50" placeholder="{{ 'Kod rabatowy' if lang == 'pl' else 'Promo code' }}">
+        <button type="submit" class="btn btn-outline-success">
+            🎟 {{ 'Zastosuj' if lang == 'pl' else 'Apply' }}
+        </button>
+    </form>
+
+    {% if znizka %}
+    <p class="text-success text-center fs-5">
+        ✅ {{ 'Zniżka aktywna' if lang == 'pl' else 'Discount applied' }}: -{{ znizka }}%
+    </p>
+    {% endif %}
+
+    <div class="checkout-form-wrapper mx-auto">
+        <form method="post" action="{{ url_for('checkout') }}" class="checkout-form p-4">
+            <div class="form-group mb-3">
+                <label>{{ 'Imię i nazwisko' if lang == 'pl' else 'Full Name' }}</label>
+                <input type="text" name="name" required placeholder="{{ 'Jan Kowalski' if lang == 'pl' else 'John Smith' }}" class="form-control">
+            </div>
+            <div class="form-group mb-3">
+                <label>{{ 'Adres dostawy' if lang == 'pl' else 'Delivery Address' }}</label>
+                <textarea name="address" required placeholder="{{ 'ul. Kwiatowa 12, Warszawa' if lang == 'pl' else '12 Flower St, London' }}" class="form-control" rows="3"></textarea>
+            </div>
+            <div class="form-group mb-4">
+                <label>{{ 'Metoda płatności' if lang == 'pl' else 'Payment Method' }}</label>
+                <select name="payment" class="form-select">
+                    <option value="card">{{ 'Karta' if lang == 'pl' else 'Card' }}</option>
+                    <option value="cash">{{ 'Gotówka' if lang == 'pl' else 'Cash' }}</option>
+                </select>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-success btn-lg px-5">
+                    ✅ {{ 'Złóż zamówienie' if lang == 'pl' else 'Place Order' }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
