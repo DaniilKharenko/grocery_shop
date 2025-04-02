@@ -3,4 +3,5 @@ mysql-connector-python==8.2.0
 Werkzeug==2.3.7
 python-dotenv
 requests
+gunicorn
 
